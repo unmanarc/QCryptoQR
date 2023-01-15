@@ -1,0 +1,274 @@
+#include "mainwindow.h"
+#include "qnamespace.h"
+#include "qpixmap.h"
+#include "ui_mainwindow.h"
+#include "crypto.h"
+#include "dialog_about.h"
+#include <QMessageBox>
+#include <QClipboard>
+
+#include <QPainter>
+#include <QtPrintSupport/QPrintDialog>
+#include <QtPrintSupport/QPrintPreviewDialog>
+#include <QtPrintSupport/QPrinter>
+
+#include <dialog_scale.h>
+#include <qrencode.h>
+
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    on_lineEdit_Pass_1_textChanged("");
+    setQRCode("EMPTY");
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::setQRCode(const QString &text)
+{
+    QRcode *qr = QRcode_encodeString(text.toUtf8().constData(), 0, getErrorCorrectionLevel(), QR_MODE_8, 1);
+    if (!qr)
+    {
+        QMessageBox::critical(this,"QR Generation", "Error ocurred during QR Generation (too large?).");
+        return;
+    }
+
+    int qrWidth = qMin(ui->label_qr->width(), ui->label_qr->height());
+
+
+    QImage qrImage = QImage(qr->width + 8, qr->width + 8, QImage::Format_RGB32);
+    qrImage.fill(0xffffff);
+    unsigned char *p = qr->data;
+    for (int y = 0; y < qr->width; y++) {
+        for (int x = 0; x < qr->width; x++) {
+            qrImage.setPixel(x + 4, y + 4, ((*p & 1) ? 0x0 : 0xffffff));
+            p++;
+        }
+    }
+    QRcode_free(qr);
+
+    auto px = QPixmap::fromImage(qrImage.scaled(qrWidth,qrWidth));
+
+    QPainter painter(&px);
+
+
+    // Draw Description Text:
+    QFont font = QFont( "Monospace", ui->comboBox_textSize->currentText().toUInt(), QFont::DemiBold );
+    font.setPointSize(font.pointSize());
+    QFontMetrics metrics(font);
+    painter.setPen(Qt::black);
+    painter.setFont(font);
+    painter.drawText(  0,  0, px.size().width(), metrics.height(), Qt::AlignCenter , ui->lineEdit_description->text());
+
+    ui->label_qr->setPixmap(px);
+}
+
+void MainWindow::encode()
+{
+    if (isPassPhraseOK())
+    {
+        bool ok;
+        auto input = ui->plainTextEdit_PlainTextToEncode->toPlainText().toStdString();
+        auto key = ui->lineEdit_Pass_1->text().toStdString();
+        auto out = Mantids::Helpers::Crypto::AES256EncryptB64(input, key, &ok );
+        if (!ok)
+        {
+            QMessageBox::critical(this,"Encryption", "Failed to encrypt, unknown error");
+            return;
+        }
+        ui->plainTextEdit_Encoded->setPlainText(QString().fromStdString(out));
+        ui->plainTextEdit_Encoded->selectAll();
+        setQRCode(QString().fromStdString(out));
+    }
+    else
+    {
+        QMessageBox::critical(this,"Encryption", "Can't encrypt\nPassphrase does not match or is empty.");
+    }
+}
+
+
+void MainWindow::on_lineEdit_Pass_1_textChanged(const QString &arg1)
+{
+    if (isPassPhraseOK())
+    {
+        ui->lineEdit_Pass_1->setStyleSheet("background-color: rgb(128, 255, 128);");
+        ui->lineEdit_Pass_2->setStyleSheet("background-color: rgb(128, 255, 128);");
+
+        ui->comboBox_textSize->setDisabled(false);
+        ui->lineEdit_description->setDisabled(false);
+        ui->plainTextEdit_PlainTextToEncode->setDisabled(false);
+
+        encode();
+    }
+    else
+    {
+        ui->lineEdit_Pass_1->setStyleSheet("background-color: rgb(255, 64, 64);");
+        ui->lineEdit_Pass_2->setStyleSheet("background-color: rgb(255, 64, 64);");
+
+        ui->comboBox_textSize->setDisabled(true);
+        ui->lineEdit_description->setDisabled(true);
+        ui->plainTextEdit_PlainTextToEncode->setDisabled(true);
+    }
+}
+
+
+void MainWindow::on_lineEdit_Pass_2_textChanged(const QString &arg1)
+{
+    on_lineEdit_Pass_1_textChanged("");
+}
+
+bool MainWindow::isPassPhraseOK()
+{
+    return ui->lineEdit_Pass_1->text() == ui->lineEdit_Pass_2->text() && !ui->lineEdit_Pass_1->text().isEmpty();
+}
+
+void MainWindow::on_toolButton_clear_encoding_clicked()
+{
+    ui->plainTextEdit_PlainTextToEncode->clear();
+    ui->plainTextEdit_PlainTextToEncode->setFocus();
+    setQRCode("EMPTY");
+}
+
+void MainWindow::on_toolButton_clear_decoding_clicked()
+{
+    ui->plainTextEdit_TextToDecode->setReadOnly(false);
+    ui->plainTextEdit_TextToDecode->clear();
+    ui->pushButton_Decode->setEnabled(true);
+    ui->plainTextEdit_TextToDecode->setFocus();
+}
+
+
+void MainWindow::on_pushButton_Decode_clicked()
+{
+    if (isPassPhraseOK())
+    {
+        bool ok;
+        auto input = ui->plainTextEdit_TextToDecode->toPlainText().toStdString();
+        auto key = ui->lineEdit_Pass_1->text().toStdString();
+        auto out = Mantids::Helpers::Crypto::AES256DecryptB64(input, key, &ok );
+        if (!ok)
+        {
+            QMessageBox::critical(this,"Decryption", "Failed to decrypt, check the password.");
+            return;
+        }
+
+        ui->plainTextEdit_TextToDecode->setPlainText(QString().fromStdString(out));
+        ui->plainTextEdit_TextToDecode->setReadOnly(true);
+        ui->plainTextEdit_TextToDecode->selectAll();
+        ui->plainTextEdit_TextToDecode->setFocus();
+        ui->pushButton_Decode->setEnabled(false);
+    }
+    else
+    {
+        QMessageBox::critical(this,"Decryption", "Can't decrypt\nPassphrase does not match or is empty.");
+    }
+}
+
+
+void MainWindow::on_actionCopy_QR_to_Clipboard_triggered()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    QImage image = ui->label_qr->pixmap().toImage();
+    clipboard->setImage(image);
+    QMessageBox::information(this,"Clipboard", "The current QR code was copied to the clipboard.");
+
+}
+
+
+void MainWindow::on_actionPrint_triggered()
+{
+    QPrinter printer;
+
+    Dialog_Scale scale;
+    if (scale.exec() != QDialog::Accepted)
+    {
+        return;
+    }
+    auto factor = scale.divFactor();
+
+    QPrintPreviewDialog preview(&printer, this);
+    connect(&preview, &QPrintPreviewDialog::paintRequested, [=](QPrinter *printer){
+        QPainter painter;
+        if (!painter.begin(printer)) {
+            // error al iniciar la vista previa
+        } else {
+            QImage image = ui->label_qr->pixmap().toImage();
+            // Viewport rectangle...
+            QRect rect = painter.viewport();
+            // Image Size.
+            QSize imageSize = image.size();
+
+            // Scale the image size to the viewport size.
+            //imageSize.scale(rect.size(), Qt::KeepAspectRatio);
+            imageSize.scale( rect.size().width()/factor ,rect.size().height()/factor, Qt::KeepAspectRatio );
+            // Set the viewport using the initial painter viewport... and the current image size.
+            painter.setViewport(rect.x(), rect.y(), imageSize.width(), imageSize.height());
+            // Set the window as the rect image...
+            painter.setWindow(image.rect());
+            // Draw the image...
+            painter.drawImage(0, 0, image);
+            painter.end();
+        }
+    });
+    if(preview.exec() == QDialog::Accepted)
+    {
+        QMessageBox::information(this, tr("Printing"), tr("Printed."));
+    }
+}
+
+
+void MainWindow::on_plainTextEdit_PlainTextToEncode_textChanged()
+{
+    encode();
+}
+
+
+void MainWindow::on_lineEdit_description_textChanged(const QString &arg1)
+{
+    encode();
+}
+
+
+void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
+{
+    encode();
+}
+
+
+void MainWindow::on_comboBox_textSize_currentIndexChanged(int index)
+{
+    encode();
+
+}
+
+QRecLevel MainWindow::getErrorCorrectionLevel()
+{
+    if (ui->comboBox_errorCorrectionLevel->currentText() == "HIGH")
+        return QR_ECLEVEL_H;
+    else if (ui->comboBox_errorCorrectionLevel->currentText() == "QUARTILE")
+        return QR_ECLEVEL_Q;
+    else if (ui->comboBox_errorCorrectionLevel->currentText() == "MEDIUM")
+        return QR_ECLEVEL_M;
+    else
+        return QR_ECLEVEL_L;
+}
+
+
+void MainWindow::on_comboBox_errorCorrectionLevel_currentIndexChanged(int )
+{
+    encode();
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    Dialog_About about;
+    about.exec();
+}
+

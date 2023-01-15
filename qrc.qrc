@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/logo.png</file>
+        <file>img/b64.png</file>
+        <file>img/qrencryptor.png</file>
+    </qresource>
+</RCC>
