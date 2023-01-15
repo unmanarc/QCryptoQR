@@ -28,6 +28,7 @@ License: GPLv3
 3. Press the "Decode from base64 button" to decrypt the data.
 
 ![Decryption Image](img/gui_dec.jpg "Decryption")
+![Decryption Image 2](img/gui_dec2.jpg "Decryption Done")
 
 
 ## Build
