@@ -42,10 +42,18 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_pushButton_encrypt_clicked();
+
+    void on_spinBox_iterations_valueChanged(int arg1);
+
+
+    void on_checkBox_visiblePass_clicked();
+
 private:
 
     QRecLevel getErrorCorrectionLevel();
     void encode();
+    void clearResults();
     void setQRCode(const QString &text);
     bool isPassPhraseOK();
     Ui::MainWindow *ui;

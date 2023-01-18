@@ -34,6 +34,13 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Iterations:</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
@@ -41,39 +48,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox">
-         <item>
-          <property name="text">
-           <string>AES-256-GCM</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Error Correction Level:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Maximum</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="1">
+       <item row="1" column="1" colspan="2">
         <widget class="QComboBox" name="comboBox_errorCorrectionLevel">
          <item>
           <property name="text">
@@ -97,6 +72,57 @@
          </item>
         </widget>
        </item>
+       <item row="0" column="1" colspan="2">
+        <widget class="QComboBox" name="comboBox">
+         <item>
+          <property name="text">
+           <string>AES-256-GCM</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="label_iterations">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>70</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Error Correction Level:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="spinBox_iterations">
+         <property name="minimum">
+          <number>100000</number>
+         </property>
+         <property name="maximum">
+          <number>10000000</number>
+         </property>
+         <property name="singleStep">
+          <number>100000</number>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -115,6 +141,48 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="2">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Strength:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_strength">
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:red;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_Pass_2">
          <property name="text">
@@ -129,17 +197,24 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="0" column="1" colspan="4">
         <widget class="QLineEdit" name="lineEdit_Pass_1">
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="1" column="1" colspan="4">
         <widget class="QLineEdit" name="lineEdit_Pass_2">
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QCheckBox" name="checkBox_visiblePass">
+         <property name="text">
+          <string>View Password</string>
          </property>
         </widget>
        </item>
@@ -156,7 +231,146 @@
         <string>Text Encryption</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0" rowspan="5">
+        <item row="0" column="1">
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Description:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QToolButton" name="toolButton_clear_encoding">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset theme="edit-clear">
+            <normaloff>.</normaloff>.</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Encrypted:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLineEdit" name="lineEdit_description">
+          <property name="text">
+           <string>Encrypted QR</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Plain text:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" colspan="4">
+         <widget class="QPlainTextEdit" name="plainTextEdit_PlainTextToEncode">
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;Courier 10 Pitch [bitstream]&quot;;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="4">
+         <widget class="QPlainTextEdit" name="plainTextEdit_Encoded">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(245, 255, 245);</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="2">
+         <widget class="QComboBox" name="comboBox_textSize">
+          <item>
+           <property name="text">
+            <string>8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>10</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>12</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>14</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>16</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>20</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="2" colspan="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>339</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="5" column="3" colspan="2">
+         <widget class="QPushButton" name="pushButton_encrypt">
+          <property name="text">
+           <string>Encrypt...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../qrc.qrc">
+            <normaloff>:/img/logo.png</normaloff>:/img/logo.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1" colspan="2">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0" rowspan="6">
          <widget class="QFrame" name="frame">
           <property name="minimumSize">
            <size>
@@ -210,115 +424,6 @@
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Description:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLineEdit" name="lineEdit_description">
-          <property name="text">
-           <string>Encrypted QR</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3" colspan="2">
-         <widget class="QComboBox" name="comboBox_textSize">
-          <item>
-           <property name="text">
-            <string>8</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>10</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>12</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>14</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>16</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>20</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Plain text:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2" colspan="2">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>339</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="4">
-         <widget class="QToolButton" name="toolButton_clear_encoding">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset theme="edit-clear">
-            <normaloff>.</normaloff>.</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="4">
-         <widget class="QPlainTextEdit" name="plainTextEdit_PlainTextToEncode">
-          <property name="styleSheet">
-           <string notr="true">font: 10pt &quot;Courier 10 Pitch [bitstream]&quot;;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Encrypted:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1" colspan="4">
-         <widget class="QPlainTextEdit" name="plainTextEdit_Encoded">
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(245, 255, 245);</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
        </layout>
@@ -441,7 +546,6 @@
  </widget>
  <tabstops>
   <tabstop>lineEdit_Pass_1</tabstop>
-  <tabstop>lineEdit_Pass_2</tabstop>
   <tabstop>plainTextEdit_PlainTextToEncode</tabstop>
   <tabstop>plainTextEdit_TextToDecode</tabstop>
   <tabstop>pushButton_Decode</tabstop>
@@ -449,5 +553,22 @@
  <resources>
   <include location="../qrc.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionE_xit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>315</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

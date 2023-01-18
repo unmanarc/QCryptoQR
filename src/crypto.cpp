@@ -12,7 +12,7 @@
 using namespace Mantids::Helpers;
 
 
-std::string Crypto::AES256EncryptB64(const unsigned char * input, uint32_t inputLen, const char * key, uint32_t keyLen, bool * ok)
+std::string Crypto::AES256EncryptB64(const unsigned char * input, uint32_t inputLen, uint32_t iterations, const char * key, uint32_t keyLen, bool * ok)
 {
     std::string out;
     if (ok)
@@ -30,7 +30,7 @@ std::string Crypto::AES256EncryptB64(const unsigned char * input, uint32_t input
         return out;
 
     // Derive the key...
-    if (PKCS5_PBKDF2_HMAC( key , keyLen, salt, sizeof(salt), 100000, EVP_sha256(), sizeof(derivedKey), derivedKey  ) == 1)
+    if (PKCS5_PBKDF2_HMAC( key , keyLen, salt, sizeof(salt), iterations, EVP_sha256(), sizeof(derivedKey), derivedKey  ) == 1)
     {
         // Initialize the encryption...
         if ((err = EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, derivedKey, salt)) == 1)
@@ -67,17 +67,17 @@ std::string Crypto::AES256EncryptB64(const unsigned char * input, uint32_t input
     return out;
 }
 
-std::string Crypto::AES256EncryptB64(const std::string &input, const char *key, uint32_t keyLen, bool *ok)
+std::string Crypto::AES256EncryptB64(const std::string &input, uint32_t iterations, const char *key, uint32_t keyLen, bool *ok)
 {
-    return AES256EncryptB64((unsigned char *)input.c_str(),input.length(),key,keyLen,ok);
+    return AES256EncryptB64((unsigned char *)input.c_str(),input.length(),iterations,key,keyLen,ok);
 }
 
-std::string Crypto::AES256EncryptB64(const std::string &input,  const std::string &key, bool *ok)
+std::string Crypto::AES256EncryptB64(const std::string &input, uint32_t iterations,  const std::string &key, bool *ok)
 {
-    return AES256EncryptB64((unsigned char *)input.c_str(),input.length(),key.c_str(),key.length(),ok);
+    return AES256EncryptB64((unsigned char *)input.c_str(),input.length(),iterations,key.c_str(),key.length(),ok);
 }
 
-std::shared_ptr<Mem::xBinContainer> Crypto::AES256DecryptB64ToBin(const std::string &input, const char *key, uint32_t keyLen, bool *ok)
+std::shared_ptr<Mem::xBinContainer> Crypto::AES256DecryptB64ToBin(const std::string &input, uint32_t iterations, const char *key, uint32_t keyLen, bool *ok)
 {
     if (ok)
         *ok = false;
@@ -104,7 +104,7 @@ std::shared_ptr<Mem::xBinContainer> Crypto::AES256DecryptB64ToBin(const std::str
             return r;
 
         // Derive the key...
-        if (PKCS5_PBKDF2_HMAC( key , keyLen, salt, sizeof(salt), 100000, EVP_sha256(), sizeof(derivedKey), derivedKey  ) == 1)
+        if (PKCS5_PBKDF2_HMAC( key , keyLen, salt, sizeof(salt), iterations, EVP_sha256(), sizeof(derivedKey), derivedKey  ) == 1)
         {
             // Initialize the encryption...
             if ((err = EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, derivedKey, salt)) == 1)
@@ -142,13 +142,13 @@ std::shared_ptr<Mem::xBinContainer> Crypto::AES256DecryptB64ToBin(const std::str
 }
 
 
-std::string Crypto::AES256DecryptB64(const std::string &input,  const char * key, uint32_t keyLen, bool *ok)
+std::string Crypto::AES256DecryptB64(const std::string &input, uint32_t iterations,  const char * key, uint32_t keyLen, bool *ok)
 {
-    return AES256DecryptB64ToBin(input,key,keyLen,ok)->toString();
+    return AES256DecryptB64ToBin(input,iterations,key,keyLen,ok)->toString();
 }
-std::string Crypto::AES256DecryptB64(const std::string &input,  const std::string & key, bool *ok)
+std::string Crypto::AES256DecryptB64(const std::string &input, uint32_t iterations,  const std::string & key, bool *ok)
 {
-    return AES256DecryptB64ToBin(input,key.c_str(),key.length(),ok)->toString();
+    return AES256DecryptB64ToBin(input,iterations,key.c_str(),key.length(),ok)->toString();
 }
 
 std::string Crypto::calcSHA256(const std::string &password)
