@@ -1,14 +1,20 @@
 #include "mainwindow.h"
+#include "qmessagebox.h"
 #include "qnamespace.h"
 #include "qpixmap.h"
 #include "ui_mainwindow.h"
 #include "crypto.h"
 #include "dialog_about.h"
+
 #include <QMessageBox>
 #include <QClipboard>
 #include <QRegularExpression>
-
+#include <QFile>
+#include <QTextStream>
+#include <QPlainTextEdit>
+#include <QFileDialog>
 #include <QPainter>
+
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrintPreviewDialog>
 #include <QtPrintSupport/QPrinter>
@@ -150,6 +156,8 @@ void MainWindow::on_lineEdit_Pass_1_textChanged(const QString &arg1)
         ui->comboBox_textSize->setDisabled(false);
         ui->lineEdit_description->setDisabled(false);
         ui->plainTextEdit_PlainTextToEncode->setDisabled(false);
+        ui->toolButton_loadFromFile->setDisabled(false);
+
 
         int score = checkPasswordStrength(ui->lineEdit_Pass_1->text());
            // display widget with color depending on password strength
@@ -169,6 +177,7 @@ void MainWindow::on_lineEdit_Pass_1_textChanged(const QString &arg1)
         ui->comboBox_textSize->setDisabled(true);
         ui->lineEdit_description->setDisabled(true);
         ui->plainTextEdit_PlainTextToEncode->setDisabled(true);
+        ui->toolButton_loadFromFile->setDisabled(true);
 
         ui->label_strength->setStyleSheet("background-color: white;");
     }
@@ -367,5 +376,28 @@ void MainWindow::on_checkBox_visiblePass_clicked()
         ui->lineEdit_Pass_1->setEchoMode(QLineEdit::EchoMode::Password);
     }
 
+}
+
+
+void MainWindow::on_toolButton_loadFromFile_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Text Files (*.txt)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"Open File", "Error opening file.");
+        return;
+    }
+
+    QTextStream in(&file);
+
+    ui->plainTextEdit_PlainTextToEncode->setPlainText(in.readAll());
+
+    file.close();
 }
 

@@ -234,36 +234,18 @@
         <string>Text Encryption</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="1">
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="1" column="2" colspan="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-          <property name="text">
-           <string>Description:</string>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>339</width>
+            <height>20</height>
+           </size>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QToolButton" name="toolButton_clear_encoding">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset theme="edit-clear">
-            <normaloff>.</normaloff>.</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Encrypted:</string>
-          </property>
-         </widget>
+         </spacer>
         </item>
         <item row="0" column="2">
          <widget class="QLineEdit" name="lineEdit_description">
@@ -272,21 +254,27 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Plain text:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="4">
+        <item row="2" column="1" colspan="5">
          <widget class="QPlainTextEdit" name="plainTextEdit_PlainTextToEncode">
           <property name="styleSheet">
            <string notr="true">font: 10pt &quot;Courier 10 Pitch [bitstream]&quot;;</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="4">
+        <item row="5" column="1" colspan="2">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="4" column="1" colspan="5">
          <widget class="QPlainTextEdit" name="plainTextEdit_Encoded">
           <property name="maximumSize">
            <size>
@@ -302,7 +290,38 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3" colspan="2">
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Encrypted:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Description:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_encrypt">
+          <property name="text">
+           <string>Encrypt...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../qrc.qrc">
+            <normaloff>:/img/logo.png</normaloff>:/img/logo.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="3">
          <widget class="QComboBox" name="comboBox_textSize">
           <item>
            <property name="text">
@@ -336,42 +355,12 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="2" colspan="2">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>339</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="5" column="3" colspan="2">
-         <widget class="QPushButton" name="pushButton_encrypt">
+        <item row="1" column="1">
+         <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Encrypt...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="../qrc.qrc">
-            <normaloff>:/img/logo.png</normaloff>:/img/logo.png</iconset>
+           <string>Plain text:</string>
           </property>
          </widget>
-        </item>
-        <item row="5" column="1" colspan="2">
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item row="0" column="0" rowspan="6">
          <widget class="QFrame" name="frame">
@@ -427,6 +416,27 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item row="1" column="5">
+         <widget class="QToolButton" name="toolButton_clear_encoding">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset theme="edit-clear">
+            <normaloff>.</normaloff>.</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QToolButton" name="toolButton_loadFromFile">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset theme="document-open"/>
+          </property>
          </widget>
         </item>
        </layout>

@@ -49,6 +49,8 @@ private slots:
 
     void on_checkBox_visiblePass_clicked();
 
+    void on_toolButton_loadFromFile_clicked();
+
 private:
 
     QRecLevel getErrorCorrectionLevel();
